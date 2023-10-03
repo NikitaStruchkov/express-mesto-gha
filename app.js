@@ -16,9 +16,6 @@ mongoose.connect(MONGO_URL);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(userRouter);
-app.use(cardRouter);
 app.use((req, res, next) => {
   req.user = {
     _id: '65198dec599029650093a934', // вставьте сюда _id созданного в предыдущем пункте пользователя
@@ -26,6 +23,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(userRouter);
+app.use(cardRouter);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
