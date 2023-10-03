@@ -13,7 +13,7 @@ module.exports.createCard = (req, res) => {
   console.log(req.user._id); // _id станет доступен
 
   Card.create({ name, link, owner: req.user._id })
-  orFail(new Error('CastError'))
+  orFail(new Error('ValidationError'))
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
