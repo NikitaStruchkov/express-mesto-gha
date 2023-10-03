@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
+const helmet = require('helmet');
 // Слушаем 3000 порт
 const { PORT = 3000, MONGO_URL = 'mongodb://127.0.0.1/mestodb' } = process.env;
 
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
 
 // подключаемся к серверу mongo
 mongoose.connect(MONGO_URL);
-
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
