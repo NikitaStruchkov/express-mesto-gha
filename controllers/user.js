@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
 const User = require('../models/user');
+const JWT_KEY = '3b2c0b48afb683532c72b31d8538ccdac9398a91ea91b290e0a90599393c65aa';
 
 //  возвращает всех пользователей
 module.exports.getUsers = (req, res) => {
@@ -110,7 +111,7 @@ module.exports.login = (req, res, next) => {
   .select('+password')
   .then((user) => {
       // аутентификация успешна! пользователь в переменной user
-      const token = jwt.sign({ _id: user._id}, 'super-strong-secret', { expiresIn: '7d' } );
+      const token = jwt.sign({ _id: user._id}, JWT_KEY, { expiresIn: '7d' } );
       // вернём токен
       res
        .cookie('jwt', token, {
