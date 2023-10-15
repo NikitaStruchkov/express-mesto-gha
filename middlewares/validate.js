@@ -1,7 +1,7 @@
 const { celebrate } = require('celebrate');
 const Joi  = require('joi');
 
-const RegExp = /https?:\/\/(www.)?[a-z0-9A-Z\-._~:/?#[\]$&'()*+@,;=]#/;
+const avatarRegExp = /https?:\/\/(www.)?[a-z0-9A-Z\-._~:/?#[\]$&'()*+@,;=]#/;
 
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
@@ -9,7 +9,7 @@ const validateCreateUser = celebrate({
     password: Joi.string().required(),
     name: Joi.string().min(1).max(40),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(RegExp),
+    avatar: Joi.string().pattern(avatarRegExp),
   }),
 });
 
@@ -22,7 +22,7 @@ const validateLogin = celebrate({
 
 const validateUserById = celebrate({
   params: Joi.object().keys({
-    id: Joi.string().alphanum().length(24),
+    id: Joi.string().hex().length(24).required(),
   }),
 });
 
@@ -35,20 +35,20 @@ const validateUpdateUser = celebrate({
 
 const validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(RegExp),
+    avatar: Joi.string().required().pattern(avatarRegExp),
   }),
 });
 
 const validateCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(RegExp),
+    link: Joi.string().required().pattern(avatarRegExp),
   }),
 });
 
 const validateCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().hex().length(24).required(),
   })
     .messages({
       'string.length': 'Длина id карточки должна быть 24 символа.',

@@ -12,7 +12,7 @@ const {
 
 userRouter.get('/users', auth, getUsers); // возвращает всех пользователей
 
-userRouter.get('/users/:userId',validateUserById, auth, getUsersById); // возвращает пользователя по _id
+userRouter.get('/users/:userId',auth, validateUserById, getUsersById); // возвращает пользователя по _id
 
 userRouter.get('/users/me', auth, currentUser); // возвращает информацию о текущем пользователе
 
