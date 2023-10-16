@@ -6,7 +6,7 @@ const JWT_KEY = '3b2c0b48afb683532c72b31d8538ccdac9398a91ea91b290e0a90599393c65a
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
+// const UnauthorizedError = require('../errors/UnauthorizedError');
 
 //  возвращает всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -19,16 +19,16 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUsersById = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
-  .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+        return res.status(err.statusCode).send({ message: err.message });
+      } else if (err.name === 'CastError') {
+        return next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        return next(err);
       }
-      if (err.name === 'CastError') {
-        next (new BadRequestError('Переданы некорректные данные'));
-      }
-      else next(err);
     });
 };
 
@@ -54,10 +54,12 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-    next (new ConflictError ('Пользователь с такой почтой уже существует'));
+   return next (new ConflictError ('Пользователь с такой почтой уже существует'));
         } else  if (err.name === 'ValidationError') {
-       next (new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
-      } else next(err);
+       return next (new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+      } else {
+        return next(err);
+      }
     });
 };
 // обновляет профиль
@@ -79,12 +81,14 @@ module.exports.updateUser = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+        return res.status(err.statusCode).send({ message: err.message });
       }
-      if (err.name === 'ValidationError') {
-        next (new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+      else if (err.name === 'ValidationError') {
+       return  next (new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
       }
-      else next(err);
+      else {
+        return next(err);
+      }
     });
 };
 // обновляет аватар
@@ -97,12 +101,14 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+        return res.status(err.statusCode).send({ message: err.message });
       }
-      if (err.name === 'ValidationError') {
-        next (new BadRequestError('Переданы некорректные данные при обновлении аватара.' ));
+      else if (err.name === 'ValidationError') {
+        return next (new BadRequestError('Переданы некорректные данные при обновлении аватара.' ));
       }
-      else next(err);
+      else {
+        return next(err);
+      }
     });
 };
 
@@ -125,10 +131,7 @@ module.exports.login = (req, res, next) => {
       })
       .send({ message: 'Успешная авторизация.' });
     })
-    .catch(() => {
-      // ошибка аутентификации
-      next (new UnauthorizedError('Неверные почта или пароль.'));
-    });
+    .catch(next);
 };
 
 
@@ -139,11 +142,11 @@ module.exports.currentUser = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+       return  res.status(err.statusCode).send({ message: err.message });
       }
-      if (err.name === 'CastError') {
-        next (new BadRequestError('Переданы некорректные данные'));
+
+      else {
+        return next(err);
       }
-      else next(err);
     });
   }

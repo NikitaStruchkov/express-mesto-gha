@@ -19,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next (new BadRequestError('Переданы некорректные данные при создании карточки.'));
+        return next (new BadRequestError('Переданы некорректные данные при создании карточки.'));
       } else next(err);
     });
 };
@@ -37,12 +37,14 @@ module.exports.deleteCardById = (req, res, next) => {
   })
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+      return   res.status(err.statusCode).send({ message: err.message });
       }
-      if (err.name === 'CastError') {
-        next (new BadRequestError('Переданы некорректные данные карточки'));
+      else if (err.name === 'CastError') {
+      return  next (new BadRequestError('Переданы некорректные данные карточки'));
       }
-      else next(err);
+      else {
+        return next(err);
+      }
     });
 };
 
@@ -58,12 +60,14 @@ module.exports.likeCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+        return res.status(err.statusCode).send({ message: err.message });
       }
-      if (err.name === 'CastError') {
-        next (new BadRequestError('Переданы некорректные данные для постановки/снятии лайка.'));
+      else if (err.name === 'CastError') {
+        return next (new BadRequestError('Переданы некорректные данные для постановки/снятии лайка.'));
       }
-      else next(err);
+      else {
+        return next(err);
+      }
     });
 };
 
@@ -80,11 +84,13 @@ module.exports.dislikeCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).send({ message: err.message });
+       return  res.status(err.statusCode).send({ message: err.message });
       }
-      if (err.name === 'CastError') {
-        next (new BadRequestError('Переданы некорректные данные для постановки/снятии лайка.'));
+      else if (err.name === 'CastError') {
+        return next (new BadRequestError('Переданы некорректные данные для постановки/снятии лайка.'));
       }
-      else next(err);
+      else {
+        return next(err);
+      }
     });
 };

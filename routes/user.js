@@ -16,8 +16,8 @@ userRouter.get('/users/:userId',auth, validateUserById, getUsersById); // воз
 
 userRouter.get('/users/me', auth, currentUser); // возвращает информацию о текущем пользователе
 
-userRouter.patch('/users/me',validateUpdateUser, auth, updateUser); // обновляет профиль
+userRouter.patch('/users/me', auth, validateUpdateUser, updateUser); // обновляет профиль
 
-userRouter.patch('/users/me/avatar', validateUpdateAvatar, auth, updateAvatar); // обновляет аватар
+userRouter.patch('/users/me/avatar',auth, validateUpdateAvatar, updateAvatar); // обновляет аватар
 
 module.exports = userRouter;
