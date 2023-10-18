@@ -1,5 +1,5 @@
 const { celebrate } = require('celebrate');
-const Joi  = require('joi');
+const Joi = require('joi');
 
 const avatarRegExp = /https?:\/\/(www.)?[a-z0-9A-Z\-._~:/?#[\]$&'()*+@,;=]#/;
 
@@ -56,6 +56,11 @@ const validateCardId = celebrate({
 });
 
 module.exports = {
-  validateCreateUser, validateLogin, validateUserById, validateUpdateUser, validateUpdateAvatar, validateCreateCard,
+  validateCreateUser,
+  validateLogin,
+  validateUserById,
+  validateUpdateUser,
+  validateUpdateAvatar,
+  validateCreateCard,
   validateCardId,
 };

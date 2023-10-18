@@ -1,10 +1,10 @@
-const express = import('express');
+const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
+const { errors } = require('celebrate');
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
-const helmet = require('helmet');
 const { login, createUser } = require('./controllers/user');
-const { errors } = require('celebrate');
 const { validateCreateUser, validateLogin } = require('./middlewares/validate');
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -24,7 +24,6 @@ app.use(express.json());
 // роуты
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
-
 
 app.use(userRouter);
 app.use(cardRouter);
